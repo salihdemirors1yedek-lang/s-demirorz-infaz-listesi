@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S_DEMIRORZ_FINAL_BOSS</title>
+    <style>
+        body { background: #000; color: #0dff00; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+        
+        /* Haber Bandı (Kırmızı Bülten) */
+        #top-news { position: fixed; top: 0; left: 0; width: 100%; background: #f00; color: #000; font-weight: bold; padding: 5px; z-index: 10001; }
+        .marquee { display: inline-block; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* Giriş Paneli */
+        #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        
+        /* Haber Kupürü Stil */
+        .newspaper { background: #ddd; color: #000; padding: 15px; width: 300px; border: 3px solid #555; margin-bottom: 20px; box-shadow: 10px 10px 0px #f00; transform: rotate(-2deg); }
+        .newspaper h2 { font-size: 18px; border-bottom: 2px solid #000; margin: 5px 0; }
+
+        /* Baron Kartı */
+        #baron-card { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; background: #111; border: 2px solid #f00; padding: 20px; z-index: 2000; text-align: center; box-shadow: 0 0 50px #f00; }
+        
+        /* Log Temizleme Animasyonu */
+        #cleaner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 20000; color: #0dff00; padding: 50px; font-size: 12px; }
+
+        input { background: #000; border: 1px solid #f00; color: #f00; padding: 10px; margin-top: 10px; text-align: center; }
+        .btn { border: 1px solid #f00; background: #f00; color: #fff; padding: 10px 20px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        
+        #main-panel { display: none; display: flex; height: 100vh; }
+        #sidebar { width: 220px; border-right: 1px solid #333; padding: 20px; background: #050505; }
+        #content { flex-grow: 1; padding: 40px; background: radial-gradient(circle, #0a1a0a 0%, #000 100%); }
+    </style>
+</head>
+<body onclick="playAmbiance()">
+
+<div id="top-news">
+    <div class="marquee">+++ SON DAKİKA: BEYKOZ ADLİYESİNDEKİ KRİTİK DOSYALARIN SIZDIRILDIĞI İDDİA EDİLİYOR... +++ EMNİYET SİNYAL TAKİBİ BAŞLATTI... +++ SALİH DEMİRÖRZ İSMİ DOSYALARIN ODAĞINDA... +++</div>
+</div>
+
+<audio id="kaos-audio" loop><source src="https://www.soundjay.com/mechanical/sounds/clanking-01.mp3" type="audio/mpeg"></audio>
+<audio id="salih-audio"><source src="https://files.catbox.moe/k3i74z.mp3" type="audio/mpeg"></audio>
+
+<div id="auth-screen">
+    <div class="newspaper">
+        <p style="font-size: 10px; margin: 0;">BEYKOZ HABER - 2024</p>
+        <h2>SALİH DEMİRÖRZ YİNE GÜNDEMDE!</h2>
+        <p style="font-size: 11px;">Beykoz'da gerçekleşen veri sızıntısının arkasındaki ismin o olduğu iddia ediliyor. Yetkililer sessiz...</p>
+    </div>
+    <input type="password" id="passInput" placeholder="SİSTEM ŞİFRESİ">
+    <button class="btn" onclick="checkAuth()">YETKİ ONAYLA</button>
+</div>
+
+<div id="baron-card">
+    <h1 style="color: #f00; margin: 0;">SALİH DEMİRÖRZ</h1>
+    <p style="color: #fff; letter-spacing: 3px;">BEYKOZ BARONU</p>
+    <div style="border: 1px dashed #f00; padding: 10px; margin: 15px 0; font-size: 12px; text-align: left;">
+        - ADLİYE ERİŞİMİ: AKTİF<br>
+        - İNFAZ YETKİSİ: ONAYLI<br>
+        - BÖLGE HAKİMİYETİ: %100
+    </div>
+    <button class="btn" onclick="enterPanel()">SİSTEME GEÇ</button>
+</div>
+
+<div id="main-panel" style="display:none;">
+    <div id="sidebar">
+        <h3 style="color: #f00;">KOMUTA MERKEZİ</h3>
+        <p>> ADLİYE SIZINTISI</p>
+        <p>> MOBESE CANLI</p>
+        <p>> İNFAZ LİSTESİ</p>
+        <button class="btn" style="background:transparent; font-size: 10px; width: 100%;" onclick="cleanLogs()">İZLERİ SİL & ÇIK</button>
+    </div>
+    <div id="content">
+        <h1 style="color:red;">ADLİYE VERİ AKIŞI İZLENİYOR</h1>
+        <iframe width="100%" height="300" src="https://www.youtube.com/embed/live_stream?channel=UCXOnL5K29nsh9C7U6z7tI1A&autoplay=1&mute=1" style="filter: grayscale(1) invert(1);"></iframe>
+    </div>
+</div>
+
+<div id="cleaner-overlay">
+    <div id="clean-text"></div>
+</div>
+
+<script>
+    function playAmbiance() { document.getElementById('kaos-audio').play(); }
+
+    function checkAuth() {
+        const pass = document.getElementById('passInput').value;
+        if(pass === "Salih123") {
+            document.getElementById('kaos-audio').pause();
+            document.getElementById('salih-audio').play();
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('baron-card').style.display = 'block';
+        } else {
+            alert("HATALI ERİŞİM! IP KAYDEDİLDİ.");
+        }
+    }
+
+    function enterPanel() {
+        document.getElementById('baron-card').style.display = 'none';
+        document.getElementById('main-panel').style.display = 'flex';
+    }
+
+    function cleanLogs() {
+        document.getElementById('main-panel').style.display = 'none';
+        const overlay = document.getElementById('cleaner-overlay');
+        overlay.style.display = 'block';
+        const lines = [
+            "Bağlantılar koparılıyor...",
+            "Beykoz Adliye sunucularından çıkış yapılıyor...",
+            "Dijital ayak izleri imha ediliyor...",
+            "Salih Demirörz kimliği gizleniyor...",
+            "Loglar temizlendi.",
+            "SİSTEM KAPATILIYOR."
+        ];
+        let i = 0;
+        const interval = setInterval(() => {
+            document.getElementById('clean-text').innerHTML += ">> " + lines[i] + "<br>";
+            i++;
+            if(i >= lines.length) {
+                clearInterval(interval);
+                setTimeout(() => { window.location.reload(); }, 2000);
+            }
+        }, 800);
+    }
+</script>
+
+</body>
+</html>
